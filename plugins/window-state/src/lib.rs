@@ -225,18 +225,20 @@ impl<R: Runtime> WindowExt for Window<R> {
             should_show = state.visible;
         } else {
 
-            let s = self.current_monitor()?.size();
-            if let Some(ss) = s
+
+            if let Some(m) = self.current_monitor()
             {
-                let w = ss.width * 0.8;
-                let h = ss.height * 0.8;
+                if let Some(ss) = m.size()
+                {
+                    let w = ss.width * 0.8;
+                    let h = ss.height * 0.8;
 
-                self.set_size(PhysicalSize {
-                    width: w as u32,
-                    height: h as u32,
-                })?;
+                    self.set_size(PhysicalSize {
+                        width: w as u32,
+                        height: h as u32,
+                    })?;
+                }
             }
-
 
             let mut metadata = WindowState::default();
 
