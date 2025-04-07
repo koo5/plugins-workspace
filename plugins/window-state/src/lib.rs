@@ -230,6 +230,12 @@ impl<R: Runtime> WindowExt for Window<R> {
                 let size = self.inner_size()?;
                 metadata.width = size.width;
                 metadata.height = size.height;
+
+                    self.set_size(PhysicalSize {
+                        width: 111,
+                        height: 111,
+                    })?;
+                
             }
 
             if flags.contains(StateFlags::POSITION) {
