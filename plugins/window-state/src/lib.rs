@@ -226,7 +226,7 @@ impl<R: Runtime> WindowExt for Window<R> {
         } else {
 
 
-            if let Some(m) = self.current_monitor()
+            if let Some(m) = self.current_monitor().ok()
             {
                 if let Some(ss) = m.size()
                 {
