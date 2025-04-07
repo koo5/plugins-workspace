@@ -24,6 +24,7 @@ use std::{
     io::BufReader,
     sync::{Arc, Mutex},
 };
+use log::info;
 
 mod cmd;
 
@@ -232,6 +233,11 @@ impl<R: Runtime> WindowExt for Window<R> {
                 {
                     let w = ss.width;
                     let h = ss.height;
+
+                    info!(
+                        "Restoring window state: {}x{}",
+                        w, h
+                    );
 
                     self.set_size(PhysicalSize {
                         width: w as u32,
