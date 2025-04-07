@@ -230,8 +230,8 @@ impl<R: Runtime> WindowExt for Window<R> {
             {
                 let ss = m.size();
                 {
-                    let w = ss.width * 99 / 100;
-                    let h = ss.height * 99 / 100;
+                    let w = ss.width;
+                    let h = ss.height;
 
                     self.set_size(PhysicalSize {
                         width: w as u32,
