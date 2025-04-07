@@ -30,3 +30,4 @@ tauri = { workspace = true }
 log = { workspace = true }
 thiserror = { workspace = true }
 bitflags = "2"
+windows = "0.61.1"

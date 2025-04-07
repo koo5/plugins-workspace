@@ -229,7 +229,10 @@ impl<R: Runtime> WindowExt for Window<R> {
 
             if let Some(Some(m)) = self.current_monitor().ok()
             {
-                let ss = m.size();
+
+                let ss = get_work_area(m);
+
+
                 {
                     let w = ss.width;
                     let h = ss.height;
@@ -245,6 +248,7 @@ impl<R: Runtime> WindowExt for Window<R> {
                     })?;
                 }
             }
+
 
             let mut metadata = WindowState::default();
 
@@ -567,3 +571,74 @@ impl MonitorExt for Monitor {
         .any(|(x, y)| x >= left && x < right && y >= top && y < bottom)
     }
 }
+
+// #[cfg(target_os = "windows")]
+// use windows::Win32::Foundation::{BOOL, LPARAM};
+// #[cfg(target_os = "windows")]
+// use windows::Win32::Graphics::Gdi::{EnumDisplayMonitors, HDC, HMONITOR, RECT};
+// #[cfg(target_os = "windows")]
+// use windows::Win32::UI::WindowsAndMessaging::{GetMonitorInfoW, MONITORINFO};
+
+
+#[cfg(target_os = "windows")]
+struct MonitorArea { monitor: HMONITOR, work_rect: RECT }
+
+#[cfg(target_os = "windows")]
+#[tauri::command]
+fn usable_areas_windows() -> Vec<(i32, i32, i32, i32)> {
+    let mut results: Vec<MonitorArea> = Vec::new();
+    unsafe {
+        // Enumerace všech monitorů
+        EnumDisplayMonitors(
+            HDC::default(),    // kontext (null = všechny monitory)
+            std::ptr::null(),  // klipovací obdélník (null = neomezovat)
+            // Callback volaný pro každý monitor:
+            Some(enum_monitor_proc),
+            // Předáme ukazatel na náš vektor jako lParam:
+            LPARAM(&mut results as *mut _ as isize),
+        );
+    }
+    // Z vektorů výsledků vytáhneme souřadnice (x, y, width, height)
+    results.iter().map(|mon| {
+        let rc = mon.work_rect;
+        (rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top)
+    }).collect()
+}
+
+// Callback funkce pro každý monitor (Win32 API volá tuto funkci):
+#[cfg(target_os = "windows")]
+unsafe extern "system" fn enum_monitor_proc(
+    hmon: HMONITOR,
+    _hdc: HDC,
+    _rc: *mut RECT,
+    lparam: LPARAM
+) -> BOOL {
+    let vec_ptr = lparam.0 as *mut Vec<MonitorArea>;
+    if let Some(monitors) = vec_ptr.as_mut() {
+        // Získání informace o monitoru
+        let mut info = MONITORINFO { cbSize: std::mem::size_of::<MONITORINFO>() as u32, ..Default::default() };
+        GetMonitorInfoW(hmon, &mut info);
+        monitors.push(MonitorArea { monitor: hmon, work_rect: info.rcWork });
+    }
+    true.into()  // pokračovat v enumeraci
+}
+
+//
+// #[cfg(target_os = "windows")]
+// fn get_work_area(monitor: Monitor) -> Option<(i32, i32)> {
+//     let mut rect = RECT::default();
+//
+//
+//
+//
+//
+//
+//
+// }
+//
+// #[cfg(target_os = "macos")]
+//
+//
+//
+//
+// #[cfg(target_os = "linux")]
