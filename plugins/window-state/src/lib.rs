@@ -226,13 +226,16 @@ impl<R: Runtime> WindowExt for Window<R> {
         } else {
 
             let s = self.current_monitor()?.size();
-            let w = s.width * 0.8;
-            let h = s.height * 0.8;
+            if let Some(ss) = s
+            {
+                let w = ss.width * 0.8;
+                let h = ss.height * 0.8;
 
-            self.set_size(PhysicalSize {
-                width: w as u32,
-                height: h as u32,
-            })?;
+                self.set_size(PhysicalSize {
+                    width: w as u32,
+                    height: h as u32,
+                })?;
+            }
 
 
             let mut metadata = WindowState::default();
