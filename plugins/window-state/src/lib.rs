@@ -225,9 +225,13 @@ impl<R: Runtime> WindowExt for Window<R> {
             should_show = state.visible;
         } else {
 
+            let s = self.current_monitor()?.size();
+            let w = s.width * 0.8;
+            let h = s.height * 0.8;
+
             self.set_size(PhysicalSize {
-                width: 111,
-                height: 111,
+                width: w as u32,
+                height: h as u32,
             })?;
 
 
