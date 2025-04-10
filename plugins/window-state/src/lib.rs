@@ -258,7 +258,6 @@ impl<R: Runtime> WindowExt for Window<R> {
                 }
             }
 
-
             let mut metadata = WindowState::default();
 
             if flags.contains(StateFlags::SIZE) {
@@ -580,4 +579,3 @@ impl MonitorExt for Monitor {
         .any(|(x, y)| x >= left && x < right && y >= top && y < bottom)
     }
 }
-
