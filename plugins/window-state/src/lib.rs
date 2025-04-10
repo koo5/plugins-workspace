@@ -230,12 +230,15 @@ impl<R: Runtime> WindowExt for Window<R> {
             if let Some(Some(m)) = self.current_monitor().ok()
             {
 
-                let ss = get_work_area(m);
+
+                // todo use get_work_area here eventually
+                let ss = m.size();
+
 
 
                 {
-                    let w = ss.width;
-                    let h = ss.height;
+                    let w = ss.width * 80 / 100;
+                    let h = ss.height * 80 / 100;
 
                     info!(
                         "Restoring window state: {}x{}",
@@ -246,6 +249,12 @@ impl<R: Runtime> WindowExt for Window<R> {
                         width: w as u32,
                         height: h as u32,
                     })?;
+
+                    self.set_position(PhysicalPosition {
+                        x: (ss.width - w) / 2 + m.position().x as u32,
+                        y: (ss.height - h) / 2 + m.position().y as u32,
+                    })?;
+
                 }
             }
 
