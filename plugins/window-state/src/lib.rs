@@ -17,6 +17,7 @@ use tauri::{
     AppHandle, Manager, Monitor, PhysicalPosition, PhysicalSize, RunEvent, Runtime, WebviewWindow,
     Window, WindowEvent,
 };
+use monitor_work_area;
 
 use std::{
     collections::{HashMap, HashSet},
@@ -229,30 +230,26 @@ impl<R: Runtime> WindowExt for Window<R> {
 
             if let Some(Some(m)) = self.current_monitor().ok()
             {
+                if let Some(name) = m.name() {
+                    let ss = monitor_work_area::get_work_area(name);
+                    if let Some(area) = ss {
 
-
-                // todo use get_work_area here eventually
-                let ss = m.size();
-
-
-
-                {
-                    let w = ss.width * 80 / 100;
-                    let h = ss.height * 80 / 100;
+                    let w = (area.right - area.left) * 80 / 100;
+                    let h = (area.bottom - area.top) * 80 / 100;
 
                     info!(
-                        "Restoring window state: {}x{}",
+                        "Calculated window size from work_area: {}x{}",
                         w, h
                     );
 
                     self.set_size(PhysicalSize {
-                        width: w as u32,
-                        height: h as u32,
+                        width: w as i32,
+                        height: h as i32,
                     })?;
 
                     self.set_position(PhysicalPosition {
-                        x: (ss.width - w) / 2 + m.position().x as u32,
-                        y: (ss.height - h) / 2 + m.position().y as u32,
+                        x: ((area.right - area.left) - w) / 2 + area.left,
+                        y: ((area.bottom - area.top) - h) / 2 + area.top,
                     })?;
 
                 }
