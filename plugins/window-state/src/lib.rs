@@ -233,25 +233,24 @@ impl<R: Runtime> WindowExt for Window<R> {
                 if let Some(name) = m.name() {
                     let ss = monitor_work_area::get_work_area(name);
                     if let Some(area) = ss {
+                        let w = (area.right - area.left) * 80 / 100;
+                        let h = (area.bottom - area.top) * 80 / 100;
 
-                    let w = (area.right - area.left) * 80 / 100;
-                    let h = (area.bottom - area.top) * 80 / 100;
+                        info!(
+                            "Calculated window size from work_area: {}x{}",
+                            w, h
+                        );
 
-                    info!(
-                        "Calculated window size from work_area: {}x{}",
-                        w, h
-                    );
+                        self.set_size(PhysicalSize {
+                            width: w as i32,
+                            height: h as i32,
+                        })?;
 
-                    self.set_size(PhysicalSize {
-                        width: w as i32,
-                        height: h as i32,
-                    })?;
-
-                    self.set_position(PhysicalPosition {
-                        x: ((area.right - area.left) - w) / 2 + area.left,
-                        y: ((area.bottom - area.top) - h) / 2 + area.top,
-                    })?;
-
+                        self.set_position(PhysicalPosition {
+                            x: ((area.right - area.left) - w) / 2 + area.left,
+                            y: ((area.bottom - area.top) - h) / 2 + area.top,
+                        })?;
+                    }
                 }
             }
 
