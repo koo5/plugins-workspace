@@ -228,10 +228,10 @@ impl<R: Runtime> WindowExt for Window<R> {
         } else {
 
 
-            if let Some(Some(m)) = self.current_monitor().ok()
+            /*if let Some(Some(m)) = self.current_monitor().ok()
             {
                 if let Some(name) = m.name() {
-                    let ss = monitor_work_area::get_work_area(name);
+                    let ss = monitor_work_area::get_work_area((*name).clone());
                     if let Some(area) = ss {
                         let w = (area.right - area.left) * 80 / 100;
                         let h = (area.bottom - area.top) * 80 / 100;
@@ -252,7 +252,7 @@ impl<R: Runtime> WindowExt for Window<R> {
                         })?;
                     }
                 }
-            }
+            }*/
 
             let mut metadata = WindowState::default();
 
