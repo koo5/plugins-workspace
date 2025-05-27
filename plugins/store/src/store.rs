@@ -277,8 +277,8 @@ impl<R: Runtime> StoreInner<R> {
     pub fn save(&self) -> crate::Result<()> {
         fs::create_dir_all(self.path.parent().expect("invalid store path"))?;
 
-        let bytes = (self.serialize_fn)(&self.cache).map_err(crate::Error::Serialize)?;
-        fs::write(&self.path, bytes)?;
+        //let bytes = (self.serialize_fn)(&self.cache).map_err(crate::Error::Serialize)?;
+        //fs::write(&self.path, bytes)?;
 
         Ok(())
     }

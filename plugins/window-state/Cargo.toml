@@ -30,3 +30,4 @@ tauri = { workspace = true }
 log = { workspace = true }
 thiserror = { workspace = true }
 bitflags = "2"
+monitor_work_area = { git = "https://github.com/koo5/monitor_work_area", version = "0.1.0", features = ["tauri"] }
